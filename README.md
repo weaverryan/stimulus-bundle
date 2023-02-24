@@ -3,13 +3,15 @@
 This bundle adds some Twig `stimulus_*` functions & filters to add Stimulus controllers, actions & targets in your
 templates.
 
+It also includes a helper to build the Stimulus data attributes and use them in your services.
+
 Install the bundle with:
 
 ```
 composer require symfony/stimulus-bundle
 ```
 
-## Usage
+## Twig functions & filters usage
 
 ### stimulus_controller
 
@@ -152,6 +154,37 @@ You can also retrieve the generated attributes as an array, which can be helpful
 
 ```twig
 {{ form_row(form.password, { attr: stimulus_target('hello-controller', 'a-target').toArray() }) }}
+```
+
+## Helper
+
+You can retrieve the helper using dependency injection, and use the built-in methods to help you build your Stimulus
+data attributes:
+
+```php
+<?php
+
+use Symfony\StimulusBundle\Helper\StimulusHelper;
+
+final class YourService
+{
+    public function __construct(private readonly StimulusHelper $stimulusHelper)
+    {
+    }
+
+    public function doSomething()
+    {
+        // And now you can call the helper to build Stimulus DTOs and retrieve strings or arrays of attributes.
+        $dto = $this->stimulusHelper->buildStimulusControllerDto('my-controller');
+
+        // Each Stimulus helper return a DTO, which implement the \Stringable interface, and have toArray() methods.
+        $dataAttr = (string) $this->stimulusHelper->buildStimulusActionDto('my-controller', 'myAction');
+        $dataAttrAsArray = $this->stimulusHelper->buildStimulusTargetDto('my-controller', 'myTarget')->toArray();
+        
+        // Also, each method have a previousDto parameter, allowing you to extend a previously built DTO.
+        $extendedDto = $this->stimulusHelper->buildStimulusControllerDto('my-controller', previousDto: $dto);
+    }
+}
 ```
 
 Ok, have fun!
