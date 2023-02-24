@@ -1,0 +1,11 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Function twig_escape_filter not found\\.$#"
+			count: 1
+			path: src/Dto/AbstractStimulusDto.php
+
+		-
+			message: "#^Comparison operation \"\\>\\=\" between \\d+ and 60100 is always true\\.$#"
+			count: 1
+			path: tests/StimulusIntegrationTestKernel.php
