@@ -14,7 +14,7 @@ use Symfony\Component\Finder\Finder;
 use Symfony\StimulusBundle\Ux\UxPackageReader;
 
 /**
- * Finds all Stimulus controllers and returns information about them.
+ * Finds all Stimulus controllers in the project & controllers.json.
  *
  * @internal
  */
