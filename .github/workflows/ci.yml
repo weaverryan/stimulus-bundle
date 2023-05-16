@@ -1,54 +1,54 @@
 name: Bundle CI
 on:
-  push:
-    branches: ['main']
-  pull_request:
-  schedule:
-    - cron: '0 */12 * * *'
+    push:
+        branches: [ 'main' ]
+    pull_request: ~
+    schedule:
+        - cron: '0 */12 * * *'
 
 jobs:
-  tests:
-    name: "Tests ${{ matrix.php-version }} deps ${{ matrix.dependency-versions }}"
-    runs-on: ubuntu-22.04
+    tests:
+        name: "Tests ${{ matrix.php-version }} deps ${{ matrix.dependency-versions }}"
+        runs-on: ubuntu-22.04
 
-    strategy:
-      fail-fast: false
-      matrix:
-        # normal, highest, non-dev installs
-        php-version: ['8.1', '8.2']
-        dependency-versions: ['highest']
-        include:
-          # testing lowest PHP version with the lowest dependencies
-          - php-version: '8.1'
-            dependency-versions: 'lowest'
+        strategy:
+            fail-fast: false
+            matrix:
+                # normal, highest, non-dev installs
+                php-version: [ '8.1', '8.2' ]
+                dependency-versions: [ 'highest' ]
+                include:
+                    # testing lowest PHP version with the lowest dependencies
+                    -   php-version: '8.1'
+                        dependency-versions: 'lowest'
 
-          # testing dev versions with the highest PHP
-          - php-version: '8.2'
-            dependency-versions: 'highest'
+                    # testing dev versions with the highest PHP
+                    -   php-version: '8.2'
+                        dependency-versions: 'highest'
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+        steps:
+            -   name: Checkout code
+                uses: actions/checkout@v3
 
-      - name: Install PHP
-        uses: shivammathur/setup-php@v2
-        with:
-            coverage: none
-            php-version: "${{ matrix.php-version }}"
+            -   name: Install PHP
+                uses: shivammathur/setup-php@v2
+                with:
+                    coverage: none
+                    php-version: "${{ matrix.php-version }}"
 
-      - name: Allow Flex Plugin
-        run: |
-          composer global config --no-plugins allow-plugins.symfony/flex true
+            -   name: Allow Flex Plugin
+                run: |
+                    composer global config --no-plugins allow-plugins.symfony/flex true
 
-      - name: Install Global Dependencies
-        run: |
-          composer global require --no-progress --no-scripts --no-plugins symfony/flex @dev
+            -   name: Install Global Dependencies
+                run: |
+                    composer global require --no-progress --no-scripts --no-plugins symfony/flex @dev
 
-      - name: Composer install
-        uses: ramsey/composer-install@v2
-        with:
-            dependency-versions: "${{ matrix.dependency-versions }}"
-            composer-options: "--prefer-dist --no-progress"
+            -   name: Composer install
+                uses: ramsey/composer-install@v2
+                with:
+                    dependency-versions: "${{ matrix.dependency-versions }}"
+                    composer-options: "--prefer-dist --no-progress"
 
-      - name: Run tests
-        run: ./vendor/bin/phpunit
+            -   name: Run tests
+                run: ./vendor/bin/simple-phpunit
