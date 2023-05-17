@@ -25,8 +25,7 @@ class ControllersMapGenerator
         private readonly UxPackageReader $uxPackageReader,
         private readonly array $controllerPaths,
         private readonly string $controllersJsonPath,
-    )
-    {
+    ) {
     }
 
     /**
@@ -74,7 +73,7 @@ class ControllersMapGenerator
             return [];
         }
 
-        $jsonData = json_decode(file_get_contents($this->controllersJsonPath), true, 512, JSON_THROW_ON_ERROR);
+        $jsonData = json_decode(file_get_contents($this->controllersJsonPath), true, 512, \JSON_THROW_ON_ERROR);
 
         $controllersList = $jsonData['controllers'] ?? [];
 
@@ -83,7 +82,7 @@ class ControllersMapGenerator
             foreach ($packageControllers as $controllerName => $localControllerConfig) {
                 $packageMetadata = $this->uxPackageReader->readPackageMetadata($packageName);
 
-                $controllerReference = $packageName . '/' . $controllerName;
+                $controllerReference = $packageName.'/'.$controllerName;
                 $packageControllerConfig = $packageMetadata->symfonyConfig['controllers'][$controllerName] ?? null;
 
                 if (null === $packageControllerConfig) {
@@ -94,9 +93,9 @@ class ControllersMapGenerator
                     continue;
                 }
 
-                $controllerMainPath = $packageMetadata->packageDirectory . '/' . $packageControllerConfig['main'];
+                $controllerMainPath = $packageMetadata->packageDirectory.'/'.$packageControllerConfig['main'];
                 $fetchMode = $localControllerConfig['fetch'] ?? 'eager';
-                $lazy = $fetchMode === 'lazy';
+                $lazy = 'lazy' === $fetchMode;
 
                 $controllerNormalizedName = substr($controllerReference, 1);
                 $controllerNormalizedName = str_replace(['_', '/'], ['-', '--'], $controllerNormalizedName);

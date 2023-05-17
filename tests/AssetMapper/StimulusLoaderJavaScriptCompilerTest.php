@@ -47,7 +47,7 @@ class StimulusLoaderJavaScriptCompilerTest extends TestCase
             true,
         );
         $loaderAsset = $this->createAsset('/assets/symfony/stimulus-bundle/loader.js');
-        $startingContents = file_get_contents(__DIR__ . '/../../assets/loader.js');
+        $startingContents = file_get_contents(__DIR__.'/../../assets/loader.js');
 
         $compiledContents = $compiler->compile($startingContents, $loaderAsset, $this->createMock(AssetMapperInterface::class));
         $this->assertStringContainsString(
@@ -80,7 +80,7 @@ class StimulusLoaderJavaScriptCompilerTest extends TestCase
             ->willReturn([]);
 
         $loaderAsset = $this->createAsset('/assets/symfony/stimulus-bundle/loader.js');
-        $startingContents = file_get_contents(__DIR__ . '/../../assets/loader.js');
+        $startingContents = file_get_contents(__DIR__.'/../../assets/loader.js');
 
         $compiler = new StimulusLoaderJavaScriptCompiler(
             $controllerMapGenerator,

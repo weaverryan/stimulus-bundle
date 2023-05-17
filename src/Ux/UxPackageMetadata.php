@@ -17,7 +17,6 @@ class UxPackageMetadata
     public function __construct(
         public readonly string $packageDirectory,
         public readonly array $symfonyConfig,
-    )
-    {
+    ) {
     }
 }

@@ -3,7 +3,6 @@
     "description": "Integration with your Symfony app & Stimulus!",
     "license": "MIT",
     "type": "symfony-bundle",
-    "minimum-stability": "dev",
     "authors": [
         {
             "name": "Symfony Community",
@@ -25,6 +24,7 @@
         "symfony/twig-bundle": "^5.4 || ^6.0",
         "zenstruck/browser": "^1.4"
     },
+    "minimum-stability": "dev",
     "autoload": {
         "psr-4": {
             "Symfony\\StimulusBundle\\": "src"

@@ -1,5 +1,12 @@
 <?php
 
+/*
+ * This file is part of the Symfony StimulusBundle package.
+ * (c) Fabien Potencier <fabien@symfony.com>
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Symfony\StimulusBundle\Tests\fixtures;
 
 use Psr\Log\NullLogger;
@@ -47,7 +54,7 @@ class StimulusTestKernel extends Kernel
                     'assets' => '',
                     __DIR__.'/vendor/fake-vendor/ux-package1/assets/dist' => 'fake-vendor/ux-package1',
                     __DIR__.'/vendor/fake-vendor/ux-package2/Resources/assets/dist' => 'fake-vendor/ux-package2',
-                    __DIR__.'/../../assets' => 'symfony/stimulus-bundle'
+                    __DIR__.'/../../assets' => 'symfony/stimulus-bundle',
                 ],
             ],
             'test' => true,
@@ -61,7 +68,7 @@ class StimulusTestKernel extends Kernel
             'controller_paths' => [
                 __DIR__.'/assets/controllers',
                 __DIR__.'/assets/more-controllers',
-            ]
+            ],
         ]);
     }
 

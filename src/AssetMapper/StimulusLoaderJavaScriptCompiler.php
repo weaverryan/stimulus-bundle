@@ -1,5 +1,12 @@
 <?php
 
+/*
+ * This file is part of the Symfony StimulusBundle package.
+ * (c) Fabien Potencier <fabien@symfony.com>
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Symfony\StimulusBundle\AssetMapper;
 
 use Symfony\Component\AssetMapper\AssetDependency;
@@ -18,13 +25,12 @@ class StimulusLoaderJavaScriptCompiler implements AssetCompilerInterface
     public function __construct(
         private readonly ControllersMapGenerator $controllersMapGenerator,
         private readonly bool $isDebug,
-    )
-    {
+    ) {
     }
 
     public function supports(MappedAsset $asset): bool
     {
-        return $asset->getSourcePath() === realpath(__DIR__ . '/../../assets/controllers.js');
+        return $asset->getSourcePath() === realpath(__DIR__.'/../../assets/controllers.js');
     }
 
     public function compile(string $content, MappedAsset $asset, AssetMapperInterface $assetMapper): string
@@ -52,11 +58,11 @@ class StimulusLoaderJavaScriptCompiler implements AssetCompilerInterface
             ));
 
             if ($mappedControllerAsset->isLazy) {
-                $lazyControllers[] = sprintf('%s: () => import(%s)', json_encode($name), json_encode($relativeImportPath, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES));
+                $lazyControllers[] = sprintf('%s: () => import(%s)', json_encode($name), json_encode($relativeImportPath, \JSON_THROW_ON_ERROR | \JSON_UNESCAPED_SLASHES));
                 continue;
             }
 
-            $controllerNameForVariable = sprintf('controller_%s', count($eagerControllerParts));
+            $controllerNameForVariable = sprintf('controller_%s', \count($eagerControllerParts));
 
             $importLines[] = sprintf(
                 "import %s from '%s';",

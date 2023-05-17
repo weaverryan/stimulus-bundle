@@ -22,13 +22,13 @@ class UxPackageReader
     {
         // remove the '@' from the name to get back to the PHP package name
         $phpPackageName = substr($packageName, 1);
-        $phpPackagePath = $this->projectDir . '/vendor/' . $phpPackageName;
+        $phpPackagePath = $this->projectDir.'/vendor/'.$phpPackageName;
         if (!is_dir($phpPackagePath)) {
             throw new \RuntimeException(sprintf('Could not find package "%s" referred to from controllers.json.', $phpPackageName));
         }
-        $packageConfigJsonPath = $phpPackagePath . '/assets/package.json';
+        $packageConfigJsonPath = $phpPackagePath.'/assets/package.json';
         if (!file_exists($packageConfigJsonPath)) {
-            $packageConfigJsonPath = $phpPackagePath . '/Resources/assets/package.json';
+            $packageConfigJsonPath = $phpPackagePath.'/Resources/assets/package.json';
         }
         if (!file_exists($packageConfigJsonPath)) {
             throw new \RuntimeException(sprintf('Could not find package.json in the "%s" package.', $phpPackagePath));
@@ -38,7 +38,7 @@ class UxPackageReader
         $packageConfigData = json_decode($packageConfigJson, true);
 
         return new UxPackageMetadata(
-            dirname($packageConfigJsonPath),
+            \dirname($packageConfigJsonPath),
             $packageConfigData['symfony'] ?? [],
         );
     }
