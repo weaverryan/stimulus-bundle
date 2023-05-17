@@ -43,7 +43,7 @@ class StimulusLoaderJavaScriptCompiler implements AssetCompilerInterface
             $relativeImportPath = $this->createRelativePath($loaderPublicPath, $controllerPublicPath);
 
             if ($mappedControllerAsset->isLazy) {
-                $lazyControllers[$name] = $relativeImportPath;
+                $lazyControllers[] = sprintf('%s: () => import(%s)', json_encode($name), json_encode($relativeImportPath, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES));
                 continue;
             }
 
@@ -59,12 +59,12 @@ class StimulusLoaderJavaScriptCompiler implements AssetCompilerInterface
 
         $importCode = implode("\n", $importLines);
         $eagerControllersJson = sprintf('{%s}', implode(', ', $eagerControllerParts));
-        $lazyControllersJson = json_encode($lazyControllers, JSON_THROW_ON_ERROR);
+        $lazyControllersExpression = sprintf('{%s}', implode(', ', $lazyControllers));
 
         $dynamicContents = <<<EOF
         $importCode
         export const eagerControllers = $eagerControllersJson;
-        export const lazyControllers = $lazyControllersJson;
+        export const lazyControllers = $lazyControllersExpression;
         EOF;
 
         // replace $controllersMapLineIndex + 2 lines above and below

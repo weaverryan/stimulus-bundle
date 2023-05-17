@@ -64,7 +64,7 @@ class StimulusLoaderJavaScriptCompilerTest extends TestCase
         );
 
         $this->assertStringContainsString(
-            'export const lazyControllers = {"bar":"..\/..\/controllers\/bar-controller.js","deeper-package":"..\/..\/some-vendor\/fake-package\/deeper-package-controller.js"};',
+            'export const lazyControllers = {"bar": () => import("../../controllers/bar-controller.js"), "deeper-package": () => import("../../some-vendor/fake-package/deeper-package-controller.js")};',
             $compiledContents,
         );
     }
