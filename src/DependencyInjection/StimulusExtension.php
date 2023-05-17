@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Symfony\StimulusBundle\DependencyInjection;
 
+use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\FileLocator;
@@ -54,6 +55,7 @@ final class StimulusExtension extends Extension implements PrependExtensionInter
     {
         $treeBuilder = new TreeBuilder('stimulus');
         $rootNode = $treeBuilder->getRootNode();
+        assert($rootNode instanceof ArrayNodeDefinition);
 
         $rootNode
             ->children()
