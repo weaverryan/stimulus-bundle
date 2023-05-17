@@ -7,14 +7,6 @@ import { Application } from '@hotwired/stimulus';
 import { eagerControllers, lazyControllers, isApplicationDebug } from './controllers.js';
 
 const controllerAttribute = 'data-controller';
-const registeredControllers = {};
-
-function registerController(name, controller, application) {
-    if (!(name in registeredControllers)) {
-        application.register(name, controller)
-        registeredControllers[name] = true
-    }
-}
 
 export const loadControllers = (application) => {
     // loop over the controllers map and require each controller
@@ -22,7 +14,7 @@ export const loadControllers = (application) => {
         registerController(name, eagerControllers[name], application);
     }
 
-    // TODO: add support for lazy controllers
+    loadLazyControllers(application);
 };
 
 export const startStimulusApp = () => {
@@ -33,3 +25,56 @@ export const startStimulusApp = () => {
 
     return application;
 };
+
+function registerController(name, controller, application) {
+    if (canRegisterController(name, application)) {
+        application.register(name, controller)
+    }
+}
+
+function loadLazyControllers(application) {
+    lazyLoadExistingControllers(application, document);
+    lazyLoadNewControllers(application, document)
+}
+
+function lazyLoadExistingControllers(application, element) {
+  queryControllerNamesWithin(element).forEach(controllerName => loadController(controllerName, application))
+}
+function queryControllerNamesWithin(element) {
+  return Array.from(element.querySelectorAll(`[${controllerAttribute}]`)).map(extractControllerNamesFrom).flat()
+}
+function extractControllerNamesFrom(element) {
+  return element.getAttribute(controllerAttribute).split(/\s+/).filter(content => content.length)
+}
+function lazyLoadNewControllers(application, element) {
+  new MutationObserver((mutationsList) => {
+    for (const { attributeName, target, type } of mutationsList) {
+      switch (type) {
+        case 'attributes': {
+          if (attributeName === controllerAttribute && target.getAttribute(controllerAttribute)) {
+            extractControllerNamesFrom(target).forEach(controllerName => loadController(controllerName, application))
+          }
+        }
+
+        case 'childList': {
+          lazyLoadExistingControllers(application, target)
+        }
+      }
+    }
+  }).observe(element, { attributeFilter: [controllerAttribute], subtree: true, childList: true })
+}
+function canRegisterController(name, application){
+  return !application.router.modulesByIdentifier.has(name)
+}
+
+async function loadController(name, application) {
+    if (canRegisterController(name, application)) {
+        if (lazyControllers[name] === undefined) {
+            console.error(`Failed to autoload controller: ${name}`);
+        }
+
+        const controllerModule = await (lazyControllers[name]());
+
+        registerController(name, controllerModule.default, application);
+    }
+}
