@@ -55,7 +55,7 @@ final class StimulusExtension extends Extension implements PrependExtensionInter
     {
         $treeBuilder = new TreeBuilder('stimulus');
         $rootNode = $treeBuilder->getRootNode();
-        assert($rootNode instanceof ArrayNodeDefinition);
+        \assert($rootNode instanceof ArrayNodeDefinition);
 
         $rootNode
             ->children()
