@@ -85,7 +85,7 @@ class StimulusLoaderJavaScriptCompilerTest extends TestCase
         );
         $compiledContents = $compiler->compile($startingContents, $loaderAsset, $this->createMock(AssetMapperInterface::class));
         $this->assertStringContainsString(
-            'application.debug = true;',
+            'const isApplicationDebug = true;',
             $compiledContents,
         );
 
@@ -95,7 +95,7 @@ class StimulusLoaderJavaScriptCompilerTest extends TestCase
         );
         $compiledContents = $compiler->compile($startingContents, $loaderAsset, $this->createMock(AssetMapperInterface::class));
         $this->assertStringContainsString(
-            'application.debug = false;',
+            'const isApplicationDebug = false;',
             $compiledContents,
         );
     }

@@ -4,12 +4,7 @@
  * Inspired by stimulus-loading.js from stimulus-rails.
  */
 import { Application } from '@hotwired/stimulus';
-
-// The following lines are dynamically rewritten by the asset mapper.
-/** @type {Object<string, Controller>} */
-export const eagerControllers = {};
-/** @type {Object<string, string>} */
-export const lazyControllers = {};
+import { eagerControllers, lazyControllers, isApplicationDebug } from './controllers.js';
 
 const controllerAttribute = 'data-controller';
 const registeredControllers = {};
@@ -32,7 +27,7 @@ export const loadControllers = (application) => {
 
 export const startStimulusApp = () => {
     const application = Application.start();
-    application.debug = true;
+    application.debug = isApplicationDebug;
 
     loadControllers(application);
 

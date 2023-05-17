@@ -23,17 +23,11 @@ class StimulusLoaderJavaScriptCompiler implements AssetCompilerInterface
 
     public function supports(MappedAsset $asset): bool
     {
-        return $asset->getSourcePath() === realpath(__DIR__ . '/../../assets/loader.js');
+        return $asset->getSourcePath() === realpath(__DIR__ . '/../../assets/controllers.js');
     }
 
     public function compile(string $content, MappedAsset $asset, AssetMapperInterface $assetMapper): string
     {
-        $lines = explode("\n", $content);
-        $controllersMapLineIndex = array_search('export const eagerControllers = {};', $lines);
-        if (false === $controllersMapLineIndex) {
-            throw new \RuntimeException('The Stimulus loader.js file must contain the line "export const controllersMap = {};"');
-        }
-
         $importLines = [];
         $eagerControllerParts = [];
         $lazyControllers = [];
@@ -61,21 +55,13 @@ class StimulusLoaderJavaScriptCompiler implements AssetCompilerInterface
         $eagerControllersJson = sprintf('{%s}', implode(', ', $eagerControllerParts));
         $lazyControllersExpression = sprintf('{%s}', implode(', ', $lazyControllers));
 
-        $dynamicContents = <<<EOF
+        $isDebugString = $this->isDebug ? 'true' : 'false';
+
+        return <<<EOF
         $importCode
         export const eagerControllers = $eagerControllersJson;
         export const lazyControllers = $lazyControllersExpression;
+        export const isApplicationDebug = $isDebugString;
         EOF;
-
-        // replace $controllersMapLineIndex + 2 lines above and below
-        array_splice($lines, $controllersMapLineIndex - 2, 5, $dynamicContents);
-
-        $finalContent = implode("\n", $lines);
-
-        if (!$this->isDebug) {
-            $finalContent = str_replace('application.debug = true;', 'application.debug = false;', $finalContent);
-        }
-
-        return $finalContent;
     }
 }
