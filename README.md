@@ -1,9 +1,10 @@
 # StimulusBundle: Symfony integration with Stimulus!
 
-This bundle adds some Twig `stimulus_*` functions & filters to add Stimulus controllers, actions & targets in your
-templates.
+This bundle adds:
 
-It also includes a helper to build the Stimulus data attributes and use them in your services.
+A) Twig `stimulus_*` functions & filters to add Stimulus controllers, actions & targets in your templates.
+B) Integration with Symfony UX & AssetMapper
+C) A helper service to build the Stimulus data attributes and use them in your services.
 
 Install the bundle with:
 

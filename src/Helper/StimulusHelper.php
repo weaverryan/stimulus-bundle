@@ -15,11 +15,16 @@ use Symfony\StimulusBundle\Dto\StimulusActionsDto;
 use Symfony\StimulusBundle\Dto\StimulusControllersDto;
 use Symfony\StimulusBundle\Dto\StimulusTargetsDto;
 use Twig\Environment;
+use Twig\Loader\ArrayLoader;
 
 final class StimulusHelper
 {
-    public function __construct(private readonly Environment $twig)
+    private readonly Environment $twig;
+
+    public function __construct(?Environment $twig)
     {
+        // Twig needed just for its escaping mechanism
+        $this->twig = $twig ?? new Environment(new ArrayLoader());
     }
 
     public function buildStimulusControllerDto(string $controllerName, array $controllerValues = [], array $controllerClasses = [], ?StimulusControllersDto $previousDto = null): StimulusControllersDto
