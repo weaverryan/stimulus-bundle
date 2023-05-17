@@ -2,6 +2,7 @@
 
 namespace Symfony\StimulusBundle\AssetMapper;
 
+use Symfony\Component\AssetMapper\AssetDependency;
 use Symfony\Component\AssetMapper\AssetMapperInterface;
 use Symfony\Component\AssetMapper\Compiler\AssetCompilerInterface;
 use Symfony\Component\AssetMapper\Compiler\AssetCompilerPathResolverTrait;
@@ -35,6 +36,20 @@ class StimulusLoaderJavaScriptCompiler implements AssetCompilerInterface
         foreach ($this->controllersMapGenerator->getControllersMap() as $name => $mappedControllerAsset) {
             $controllerPublicPath = $mappedControllerAsset->asset->getPublicPathWithoutDigest();
             $relativeImportPath = $this->createRelativePath($loaderPublicPath, $controllerPublicPath);
+
+            /*
+             * The AssetDependency will already be added by AssetMapper itself when
+             * it processes this file. However, due to the "stimulusFetch: 'lazy'"
+             * that may appear inside the controllers, this file is dependent on
+             * the "contents" of each controller. So, we add the dependency here
+             * and mark it as a "content" dependency so that this file's contents
+             * will be recalculated when the contents of any controller changes.
+             */
+            $asset->addDependency(new AssetDependency(
+                $mappedControllerAsset->asset,
+                $mappedControllerAsset->isLazy,
+                true,
+            ));
 
             if ($mappedControllerAsset->isLazy) {
                 $lazyControllers[] = sprintf('%s: () => import(%s)', json_encode($name), json_encode($relativeImportPath, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES));

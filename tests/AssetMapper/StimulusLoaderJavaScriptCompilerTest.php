@@ -67,6 +67,9 @@ class StimulusLoaderJavaScriptCompilerTest extends TestCase
             'export const lazyControllers = {"bar": () => import("../../controllers/bar-controller.js"), "deeper-package": () => import("../../some-vendor/fake-package/deeper-package-controller.js")};',
             $compiledContents,
         );
+
+        // all 4 controllers should be dependencies
+        $this->assertCount(4, $loaderAsset->getDependencies());
     }
 
     public function testDebugModeIsSetCorrectly()
